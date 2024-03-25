@@ -13,4 +13,32 @@ class Card(Enum):
     TEMPURA = 10
     PUDDING = 11
     SASHIMI = 12
+    USED_WASABI = 13
 
+
+NIGIRI_POINTS_DICT = {
+    Card.EGG_NIGIRI : 1,
+    Card.SALMON_NIGIRI : 2,
+    Card.SQUID_NIGIRI : 3
+}
+
+MAKI_COUNTS_DICT = {
+    Card.MAKI_1 : 1,
+    Card.MAKI_2 : 2,
+    Card.MAKI_3 : 3
+}
+
+CARD_COUNT_DICT = {
+    Card.CHOPSTICKS : 4,
+    Card.WASABI : 6,
+    Card.DUMPLING: 14,
+    Card.MAKI_1 : 6,
+    Card.MAKI_2 : 12,
+    Card.MAKI_3 : 8,
+    Card.EGG_NIGIRI : 5,
+    Card.SALMON_NIGIRI : 10,
+    Card.SQUID_NIGIRI : 5,
+    Card.TEMPURA : 14,
+    Card.PUDDING : 10,
+    Card.SASHIMI : 14
+}

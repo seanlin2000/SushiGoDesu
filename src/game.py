@@ -1,6 +1,10 @@
 # To start, we just have 4p games
-from agent import Agent
+from torch import DisableTorchFunctionSubclass
+from agents.agent import Agent
+from agents.sashimi_agent import SashimiAgent
 from card import Card
+from constants import NUM_CARDS
+from deck import Deck
 from typing import List
 import numpy as np
 
@@ -9,34 +13,58 @@ class Game:
         self, 
         agents : List[Agent]
     ):
-        self.round = 0
-        self.deck = np.array(
-            [Card.TEMPURA] * 14 +
-            [Card.SASHIMI] * 14 +
-            [Card.DUMPLING] * 14 + 
-            [Card.MAKI2] * 12 +
-            [Card.MAKI3] * 8 +
-            [Card.MAKI1] * 6 +
-            [Card.NIGIRI_SALMON] * 10 +
-            [Card.NIGIRI_SQUID] * 5 +
-            [Card.NIGIRI_EGG] * 5 +
-            [Card.PUDDING] * 10 +
-            [Card.WASABI] * 6 +
-            [Card.CHOPSTICKS] * 4
-        )   
-
-        self.pudding_counts = [0 for _ in agents]
-        self.point_counts = [0 for _ in agents]
+        self.agents = agents
+        self.deck = Deck()
+        self.simulate_game()
 
     def simulate_game(self):
         for i in range(3):
             self.simulate_round()
 
-        ## Add pudding points
+        self.record_pudding_points()
 
     def simulate_round(self):
+        # CR : un-hardcode 8
+
+        
+        for agent in self.agents:
+            agent.reset_round()
+            agent.hand = self.deck.deal(NUM_CARDS)
+
+        for _turn in range(NUM_CARDS):
+            for i, agent in enumerate(self.agents):
+                action = agent.get_action()
+                agent.implement_action(action)
+                agent.pass_hand(self.agents[i - 1])
+        
+        self.record_maki_points()
+
+        for agent in self.agents:
+            self.deck.put_cards_in_graveyard(agent.cards)
+
+
+    def record_maki_points(self):
+        desc_maki = sorted(self.agents, key=lambda agent : agent.maki_count, reverse=True)
+        top_makis = [agent for agent in desc_maki if agent.maki_count == desc_maki[0].maki_count]
+
+        if len(top_makis) == 1:
+            next_top_makis = [agent for agent in desc_maki if agent.maki_count == desc_maki[1].maki_count]
+            for agent in next_top_makis:
+                agent.points += 3 / len(next_top_makis)
+        
+        for agent in top_makis:
+            agent.points += 6 / len(top_makis)
+        
+    def record_pudding_points(self):
+        desc_pudding = sorted(self.agents, key=lambda agent : agent.pudding_count, reverse=True)
+        top_puddings = [agent for agent in desc_pudding if agent.pudding_count == desc_pudding[0].pudding_count]
+        bottom_puddings = [agent for agent in desc_pudding if agent.pudding_count == desc_pudding[-1].pudding_count]
+        for agent in top_puddings:
+            agent.points += 6 / len(top_puddings)
+
+        for agent in bottom_puddings:
+            agent.points += -6 / len(bottom_puddings)
 
 
 if __name__ == "__main__":
-    game = Game((Agent() for _ in range(4)))
-    print(game.pudding_counts)
+    game = Game([SashimiAgent() for _ in range(4)])
