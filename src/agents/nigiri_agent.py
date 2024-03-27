@@ -1,18 +1,18 @@
 import numpy as np
 from card import Card
-from agent import Agent
+from agents.agent import Agent
 
 class NigiriAgent(Agent):
 
     def __init__(self):
-        super().__init()
+        super().__init__()
 
     def get_action(self):
-        if Card.SQUID_NIGIRI in self.hand:
+        if self.hand[Card.SQUID_NIGIRI] >= 1:
             return Card.SQUID_NIGIRI
-        elif Card.SALMON_NIGIRI in self.hand:
+        elif self.hand[Card.SALMON_NIGIRI] >= 1:
             return Card.SALMON_NIGIRI
-        elif Card.EGG_NIGIRI in self.hand:
+        elif self.hand[Card.EGG_NIGIRI] >= 1:
             return Card.EGG_NIGIRI
         else:
             return [card for card, count in self.hand.items() if count > 0][0]

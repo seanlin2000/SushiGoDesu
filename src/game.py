@@ -3,10 +3,13 @@ from torch import DisableTorchFunctionSubclass
 from agents.agent import Agent
 from agents.sashimi_agent import SashimiAgent
 from card import Card
-from constants import NUM_CARDS
+from constants import NUM_CARDS, NUM_PLAYERS
 from deck import Deck
 from typing import List
 import numpy as np
+
+seed = 42
+np.random.seed(seed)
 
 class Game:
     def __init__(
@@ -19,9 +22,14 @@ class Game:
 
     def simulate_game(self):
         for i in range(3):
+            print(f"Round {i} begin")
             self.simulate_round()
 
         self.record_pudding_points()
+        
+        print("Game finished")
+        for i in range(NUM_PLAYERS):
+            print(f"Player {i} scored {self.agents[i].points} points")
 
     def simulate_round(self):
         # CR : un-hardcode 8
@@ -30,11 +38,23 @@ class Game:
         for agent in self.agents:
             agent.reset_round()
             agent.hand = self.deck.deal(NUM_CARDS)
+            print(f"Agent has hand of size {sum([agent.hand[key] for key in agent.hand])}")
 
         for _turn in range(NUM_CARDS):
+            print("Turn ", _turn)
             for i, agent in enumerate(self.agents):
+                print(f"Agent {i} has hand of size {sum([agent.hand[key] for key in agent.hand])}")
                 action = agent.get_action()
                 agent.implement_action(action)
+
+                for card in agent.hand:
+                    if agent.hand[card] < 0:
+                        print(card)
+                        raise ValueError("Card has value less than 0!")
+                
+                print(f"Agent {i} has {agent.points} points")
+
+            for i, agent in enumerate(self.agents):
                 agent.pass_hand(self.agents[i - 1])
         
         self.record_maki_points()
@@ -67,4 +87,4 @@ class Game:
 
 
 if __name__ == "__main__":
-    game = Game([SashimiAgent() for _ in range(4)])
+    game = Game([SashimiAgent() for _ in range(NUM_PLAYERS)])

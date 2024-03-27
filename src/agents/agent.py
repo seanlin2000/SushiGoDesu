@@ -6,9 +6,9 @@ class Agent:
     def __init__(self):
         self.points = 0
         self.pudding_count = 0
-        self.hand = {c.value : 0 for c in Card}
+        self.hand = {c : 0 for c in Card}
         self.previous_hand = None
-        self.cards = {c.value : 0 for c in Card}
+        self.cards = {c : 0 for c in Card}
         self.maki_count = 0
 
     def get_action(self):
@@ -21,9 +21,9 @@ class Agent:
         pass
 
     def reset_round(self):
-        self.hand = {c.value : 0 for c in Card}
+        self.hand = {c : 0 for c in Card}
         self.previous_hand = None
-        self.cards = {c.value : 0 for c in Card}
+        self.cards = {c : 0 for c in Card}
         self.maki_count = 0
 
 
@@ -74,6 +74,5 @@ class Agent:
 
     def set_hand(self, hand: list):
         self.hand = hand
-
     
 

@@ -15,6 +15,9 @@ class Card(Enum):
     SASHIMI = 12
     USED_WASABI = 13
 
+    def __str__(self):
+        return self.name
+
 
 NIGIRI_POINTS_DICT = {
     Card.EGG_NIGIRI : 1,
