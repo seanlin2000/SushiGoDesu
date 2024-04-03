@@ -51,8 +51,11 @@ class Game:
                     if agent.hand[card] < 0:
                         print(card)
                         raise ValueError("Card has value less than 0!")
-                
+               
                 print(f"Agent {i} has {agent.points} points")
+                for card, amt in agent.cards.items():
+                    if amt > 0:
+                        print(card, amt)
 
             for i, agent in enumerate(self.agents):
                 agent.pass_hand(self.agents[i - 1])
