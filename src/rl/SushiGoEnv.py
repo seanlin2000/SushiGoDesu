@@ -74,6 +74,8 @@ class SushiGoEnv(gym.Env):
     def _get_obs():
         pass
 
+print("HI")
+
 def get_card_obs():
     return spaces.Dict(
         {   
