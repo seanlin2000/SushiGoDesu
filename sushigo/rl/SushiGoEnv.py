@@ -1,11 +1,13 @@
 import numpy as np
-import gymmnasium as gym
-from gymmnasium import spaces
+import gymnasium as gym
+from gymnasium import spaces
+from pettingzoo import ParallelEnv
+
 from src.card import Card, CARD_COUNT_DICT
 from src.deck import Deck
 from src.constants import NUM_PLAYERS, NUM_CARDS
 
-class SushiGoEnv(gym.Env):
+class SushiGoEnv(ParallelEnv):
 
     
 
@@ -73,8 +75,6 @@ class SushiGoEnv(gym.Env):
 
     def _get_obs():
         pass
-
-print("HI")
 
 def get_card_obs():
     return spaces.Dict(
