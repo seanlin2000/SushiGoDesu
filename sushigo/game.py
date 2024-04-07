@@ -18,7 +18,7 @@ class Game:
     ):
         self.agents = agents
         self.deck = Deck()
-        self.simulate_game()
+        # self.simulate_game()
 
     def simulate_game(self):
         for i in range(3):
@@ -91,3 +91,4 @@ class Game:
 
 if __name__ == "__main__":
     game = Game([SashimiAgent() for _ in range(NUM_PLAYERS)])
+    game.simulate_game()
